@@ -21,6 +21,12 @@ export default function enrollScreen() {
   const [studentNim, setStudentNim] = useState("");
   const [photoUri, setPhotoUri] = useState<string | null>(null);
 
+  const [isResultModalVisible, setResultModalVisible] = useState(false);
+  const [resultStatus, setResultStatus] = useState<"success" | "error" | null>(
+    null,
+  );
+  const [resultMessage, setResultMessage] = useState("");
+
   const cameraRef = useRef<CameraView>(null);
 
   if (!permission) return <View />;
@@ -48,7 +54,8 @@ export default function enrollScreen() {
       setIsProcessing(true);
       try {
         const photo = await cameraRef.current.takePictureAsync({
-          quality: 0.7,
+          quality: 0.3,
+          base64: false,
         });
         setPhotoUri(photo.uri);
         setModalVisible(true);
@@ -91,14 +98,21 @@ export default function enrollScreen() {
       });
 
       const result = await response.json();
-      if (response.ok) {
-        alert(`Enrollment successful. ${result.messege}`);
+
+      if (result.status === "success") {
+        setResultStatus("success");
+        setResultMessage(`Data mahasiswa ${studentName} berhasil tersimpan`);
       } else {
-        alert(`Enrollment failed: ${result.message || "Unknown error"}`);
+        setResultStatus("error");
+        setResultMessage(result.message || "Gagal menyimpan data.");
       }
+
+      setResultModalVisible(true);
     } catch (error) {
       console.error(error);
-      alert("Enrollment failed. not connected to server.");
+      setResultStatus("error");
+      setResultMessage("Not connected to th server. check your connection");
+      setResultModalVisible(true);
     } finally {
       setIsProcessing(false);
       setStudentName("");
@@ -132,7 +146,7 @@ export default function enrollScreen() {
         </View>
       </CameraView>
 
-      {/* MODAL */}
+      {/* MODAL INPUT */}
 
       <Modal visible={isModalVisible} transparent={true} animationType="slide">
         <View style={styles.modalOverlay}>
@@ -165,6 +179,42 @@ export default function enrollScreen() {
                 <Text style={styles.submitText}>Simpan</Text>
               </TouchableOpacity>
             </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* 2. MODAL HASIL ENROLLMENT (SUKSES/GAGAL) */}
+      <Modal
+        visible={isResultModalVisible}
+        transparent={true}
+        animationType="fade"
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.resultContent}>
+            <Text style={styles.resultIcon}>
+              {resultStatus === "success" ? "✅" : "❌"}
+            </Text>
+            <Text
+              style={[
+                styles.resultTitle,
+                resultStatus === "error" && { color: "#D32F2F" },
+              ]}
+            >
+              {resultStatus === "success"
+                ? "Pendaftaran Berhasil!"
+                : "Pendaftaran Gagal"}
+            </Text>
+            <Text style={styles.resultMessage}>{resultMessage}</Text>
+
+            <TouchableOpacity
+              style={[
+                styles.okBtn,
+                resultStatus === "error" && { backgroundColor: "#D32F2F" },
+              ]}
+              onPress={() => setResultModalVisible(false)}
+            >
+              <Text style={styles.okBtnText}>Tutup</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -255,7 +305,7 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins_400Regular",
   },
 
-  //Modal
+  //Modal Input
 
   modalOverlay: {
     flex: 1,
@@ -311,5 +361,51 @@ const styles = StyleSheet.create({
   submitText: {
     color: "white",
     fontWeight: "bold",
+  },
+
+  //Modal Result
+  resultContent: {
+    backgroundColor: "white",
+    padding: 30,
+    borderRadius: 20,
+    alignItems: "center",
+    width: "85%",
+    elevation: 10,
+  },
+
+  resultIcon: {
+    fontSize: 50,
+    marginBottom: 10,
+  },
+
+  resultTitle: {
+    fontSize: 22,
+    fontWeight: "bold",
+    color: "#2E7D32",
+    marginBottom: 10,
+    textAlign: "center",
+  },
+
+  resultMessage: {
+    fontSize: 16,
+    color: "#333",
+    marginBottom: 25,
+    textAlign: "center",
+    lineHeight: 22,
+  },
+
+  okBtn: {
+    backgroundColor: "#2E7D32",
+    paddingVertical: 12,
+    paddingHorizontal: 40,
+    borderRadius: 10,
+    width: "100%",
+    alignItems: "center",
+  },
+
+  okBtnText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 16,
   },
 });

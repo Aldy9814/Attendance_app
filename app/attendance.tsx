@@ -50,7 +50,7 @@ export default function AttendancePage() {
           type: "image/jpeg",
         } as any);
 
-        // Pastikan IP ini sama dengan IP di file enroll.tsx
+        // API
         const response = await fetch("http://10.36.14.6:8000/verify", {
           method: "POST",
           body: formData,
