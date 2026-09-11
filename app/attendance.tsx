@@ -83,20 +83,20 @@ export default function AttendancePage() {
     <View style={styles.container}>
       <CameraView style={styles.cameraContainer} facing="front" ref={cameraRef}>
         <View style={styles.overlay}>
-          {/* Tombol Kembali */}
           <View style={styles.header}>
+            {/* BACK BUTTON */}
             <TouchableOpacity
               style={styles.backBtn}
               onPress={() => router.back()}
             >
-              <Text style={styles.backText}>← Kembali</Text>
+              <Text style={styles.backText}>← Back</Text>
             </TouchableOpacity>
           </View>
 
-          {/* Kotak Panduan Wajah */}
+          {/* FACE GUIDE */}
           <View style={styles.faceGuide} />
 
-          {/* Tombol Absen */}
+          {/* ATTEND BUTTON */}
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={[
@@ -116,7 +116,7 @@ export default function AttendancePage() {
         </View>
       </CameraView>
 
-      {/* Modal */}
+      {/* MODAL */}
 
       <Modal visible={isModalVisible} transparent={true} animationType="fade">
         <View style={styles.modalOverlay}>
@@ -129,7 +129,7 @@ export default function AttendancePage() {
 
             <TouchableOpacity
               style={styles.okBtn}
-              onPress={() => setModalVisible(false)} // Tutup modal saat ditekan
+              onPress={() => setModalVisible(false)}
             >
               <Text style={styles.okBtnText}>Tutup</Text>
             </TouchableOpacity>
@@ -141,15 +141,29 @@ export default function AttendancePage() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff" },
-  center: { flex: 1, justifyContent: "center", alignItems: "center" },
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
+
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
   btn: {
     padding: 10,
     backgroundColor: "#00529C",
     marginTop: 10,
     borderRadius: 8,
   },
-  btnText: { color: "white", fontWeight: "bold" },
+
+  btnText: {
+    color: "white",
+    fontWeight: "bold",
+  },
+
   defaultText: {
     fontSize: 16,
     color: "#000",
@@ -166,14 +180,24 @@ const styles = StyleSheet.create({
     paddingVertical: 40,
   },
 
-  header: { width: "100%", paddingHorizontal: 20, alignItems: "flex-start" },
+  header: {
+    width: "100%",
+    paddingHorizontal: 20,
+    alignItems: "flex-start",
+  },
+
   backBtn: {
     backgroundColor: "rgba(0,0,0,0.6)",
     paddingVertical: 8,
     paddingHorizontal: 15,
     borderRadius: 8,
   },
-  backText: { color: "white", fontWeight: "bold", fontSize: 16 },
+
+  backText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
 
   faceGuide: {
     width: 250,
@@ -185,7 +209,12 @@ const styles = StyleSheet.create({
     marginTop: 50,
   },
 
-  buttonContainer: { width: "100%", alignItems: "center", marginBottom: 20 },
+  buttonContainer: {
+    width: "100%",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+
   shutterButton: {
     backgroundColor: "#2E7D32",
     paddingVertical: 18,
@@ -193,8 +222,16 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     elevation: 5,
   },
-  shutterButtonDisabled: { backgroundColor: "#A9A9A9" },
-  buttonText: { fontSize: 16, color: "#fff", fontWeight: "bold" },
+
+  shutterButtonDisabled: {
+    backgroundColor: "#A9A9A9",
+  },
+
+  buttonText: {
+    fontSize: 16,
+    color: "#fff",
+    fontWeight: "bold",
+  },
 
   modalOverlay: {
     flex: 1,

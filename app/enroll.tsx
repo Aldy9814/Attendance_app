@@ -33,18 +33,13 @@ export default function enrollScreen() {
 
   if (!permission.granted) {
     return (
-      <View style={styles.container}>
-        <View style={styles.stepContainer}>
-          <Text style={styles.defaultText}>
-            Camera permission is required for face enrollment.
-          </Text>
-          <TouchableOpacity
-            style={styles.buttonContainer}
-            onPress={requestPermission}
-          >
-            <Text style={styles.buttonText}>Grant Permission</Text>
-          </TouchableOpacity>
-        </View>
+      <View style={styles.center}>
+        <Text style={styles.defaultText}>
+          Akses kamera dibutuhkan untuk mendaftar.
+        </Text>
+        <TouchableOpacity onPress={requestPermission} style={styles.btn}>
+          <Text style={styles.btnText}>Izinkan</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -59,8 +54,6 @@ export default function enrollScreen() {
         });
         setPhotoUri(photo.uri);
         setModalVisible(true);
-
-        //TODO: FastAPI call to send the photo to the backend for face recognition and attendance marking
       } catch (error) {
         console.error("Error taking photo:", error);
         alert("Failed to take photo. Please try again.");
@@ -101,6 +94,7 @@ export default function enrollScreen() {
 
       if (result.status === "success") {
         setResultStatus("success");
+        alert("Mahasiswa berhasil terdaftar");
         setResultMessage(`Data mahasiswa ${studentName} berhasil tersimpan`);
       } else {
         setResultStatus("error");
@@ -125,6 +119,15 @@ export default function enrollScreen() {
     <View style={styles.container}>
       <CameraView style={styles.cameraContainer} facing="front" ref={cameraRef}>
         <View style={styles.overlay}>
+          <View style={styles.header}>
+            <TouchableOpacity
+              style={styles.backBtn}
+              onPress={() => router.back()}
+            >
+              <Text style={styles.backText}>← back</Text>
+            </TouchableOpacity>
+          </View>
+
           <View style={styles.faceGuide} />
 
           <View style={styles.buttonContainer}>
@@ -183,7 +186,7 @@ export default function enrollScreen() {
         </View>
       </Modal>
 
-      {/* 2. MODAL HASIL ENROLLMENT (SUKSES/GAGAL) */}
+      {/* ENROLLMENT STATUS */}
       <Modal
         visible={isResultModalVisible}
         transparent={true}
@@ -258,9 +261,46 @@ const styles = StyleSheet.create({
     paddingVertical: 60,
   },
 
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  btn: {
+    padding: 10,
+    backgroundColor: "#00529C",
+    marginTop: 10,
+    borderRadius: 8,
+  },
+
+  btnText: {
+    color: "white",
+    fontWeight: "bold",
+  },
+
   //CAMERA
   cameraContainer: {
     flex: 1,
+  },
+
+  header: {
+    width: "100%",
+    paddingHorizontal: 20,
+    alignItems: "flex-start",
+  },
+
+  backBtn: {
+    backgroundColor: "rgba(0,0,0,0.6)",
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    borderRadius: 8,
+  },
+
+  backText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 16,
   },
 
   faceGuide: {
@@ -270,7 +310,7 @@ const styles = StyleSheet.create({
     borderColor: "rgba(255, 255, 255, 0.5)",
     borderRadius: 20,
     borderStyle: "dashed",
-    marginTop: 150,
+    marginTop: 50,
   },
 
   shutterButton: {
